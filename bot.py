@@ -2,24 +2,23 @@
 # !/usr/bin/env python
 #  -*- coding: utf-8 -*-
 import json
+import os
 import time
 from datetime import datetime
 
 import tweepy
 import requests
-
-from creds import *
  
 
-auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
-auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
+auth = tweepy.OAuthHandler(os.environ['CONSUMER_KEY'], os.environ['CONSUMER_SECRET'])
+auth.set_access_token(os.environ['ACCESS_KEY'], os.environ['ACCESS_SECRET'])
 api = tweepy.API(auth)
 
 # would want a db in the future if I do more complex things
 processed_files = []
  
 fec_params = {
-    'api_key': FEC_API_KEY,
+    'api_key': os.environ['FEC_API_KEY'],
     # don't want to flood the feed with repeats
     'min_receipt_date': datetime.now(),
 }
