@@ -2,11 +2,11 @@
 # !/usr/bin/env python
 #  -*- coding: utf-8 -*-
 import json
+import logging
 import os
 import time
 from datetime import datetime
 
-import logging
 import tweepy
 import requests
  
@@ -25,8 +25,7 @@ fec_params = {
 }
 
 
-logging.info('running')
-api.update_status('deploy successful')
+logging.info('running...')
 
 while True:
     filings = requests.get('https://api.open.fec.gov/v1/efile/filings/?sort=-receipt_date&per_page=70', params=fec_params).json()
