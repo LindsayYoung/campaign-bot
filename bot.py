@@ -35,7 +35,7 @@ while True:
                 message = committee_name + ' ' + link
                 if record['amends_file'] is not None:
                     message = committee_name[:106] + ' ' + link +' amendment'
-                print (message)
+                api.update_status(message)
                 processed_files.append(record['file_number'])
 
                 if len(processed_files) > 500:
