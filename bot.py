@@ -6,6 +6,7 @@ import os
 import time
 from datetime import datetime
 
+import logging
 import tweepy
 import requests
  
@@ -24,11 +25,14 @@ fec_params = {
 }
 
 
+logging.info('running')
 api.update_status('deploy successful')
+
 while True:
     filings = requests.get('https://api.open.fec.gov/v1/efile/filings/?sort=-receipt_date&per_page=70', params=fec_params).json()
-
+    logging.info('True')
     if 'results' in filings:
+        logging.info('looping')
         for record in filings['results']:
             if record['file_number'] not in processed_files:
                 committee_name = str(record['committee_name'] or '')[:116]
