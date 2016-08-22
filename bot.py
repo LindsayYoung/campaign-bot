@@ -27,10 +27,6 @@ fec_params = {
 while True:
     filings = requests.get('https://api.open.fec.gov/v1/efile/filings/?sort=-receipt_date&per_page=70', params=fec_params).json()
 
-
-
-
-
     if 'results' in filings:
         for record in filings['results']:
             if record['file_number'] not in processed_files:
