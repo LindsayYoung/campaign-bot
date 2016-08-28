@@ -1,4 +1,4 @@
-'''Would like to refine it to top races'''
+'''Would like to refine it to top races, maybe tight races http://rothenberggonzales.com/developer'''
 
 committees = {
     '': 'Prez',

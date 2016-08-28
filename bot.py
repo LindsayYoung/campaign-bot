@@ -24,7 +24,7 @@ fec_params = {
     'min_receipt_date': datetime.now(),
 }
 
-api.update_status('Deployed')
+logging.info('Running...')
 
 while True:
     filings = requests.get('https://api.open.fec.gov/v1/efile/filings/?sort=-receipt_date&per_page=70', params=fec_params).json()
