@@ -33,8 +33,9 @@ while True:
         for record in filings['results']:
             if record['file_number'] not in processed_files:
                 committee_name = str(record['committee_name'] or '')[:116]
+                candidate_name = str(record['candidate_name'] or '')[:116]
                 link = 'http://docquery.fec.gov/cgi-bin/forms/{0}/{1}'.format(record['committee_id'], record['file_number'])
-                message = committee_name + ' ' + link
+                message = committee_name + candidate_name + ' ' + link
                 if record['amends_file'] is not None:
                     message = committee_name[:106] + ' ' + link +' amendment'
                 api.update_status(message)
