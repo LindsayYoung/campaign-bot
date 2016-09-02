@@ -27,7 +27,7 @@ def mail_update(server, data, mail_to):
     msg['Subject'] = "Today's filings!"
     msg['From'] = os.environ['EMAIL_ADDRESS']
     msg['BCC'] = mail_to
-    template = jinja_environment.get_template('email_template.html')
+    template = jinja_environment.get_template('basic_filing.html')
     text = template.render(data)
     msg.attach(MIMEText(text, 'html'))
     text = msg.as_string()
