@@ -73,8 +73,7 @@ def read_results(results):
 
 
 # fetch filings
-# total page replace with one for testing
-while 1 >= page:
+while total_pages >= page:
     filings = requests.get(base_url, params=fec_params).json()
     if 'results' in filings:
         read_results(filings['results'])
@@ -103,8 +102,3 @@ template_data = {
 
 server = mail_script.email_log_in()
 mail_script.mail_update(server, template_data, os.environ['ADMIN_EMAIL'])
-    
-
-# create email
-    #Form Type  FEC ID  Amended By  Coverage Start Date Coverage End Date   Filed Date  Report Type View    Download
-# use mailscript
