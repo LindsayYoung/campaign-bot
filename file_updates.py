@@ -11,8 +11,7 @@ import requests
 
 import mail_script
 
-total_pages = 1
-page = 1
+
 tomorrow = datetime.today() + timedelta(1)
 yesterday = datetime.today() - timedelta(1)
 fec_params = {
@@ -21,9 +20,6 @@ fec_params = {
     'max_receipt_date': tomorrow.strftime("%Y-%m-%d"),
     'page': 1,
 }
-
-# replace with DB
-filing_dict ={}
 
 base_url = 'https://api.open.fec.gov/v1/filings/?sort=-receipt_date&per_page=100'
 
@@ -40,7 +36,7 @@ def analize_file(num, pdf):
     else:
         return pdf
 
-def read_results(results):
+def read_results(results, filing_dict):
     for r in results:
         result = {
             'sub_id': r['sub_id'], # primary key
@@ -72,33 +68,36 @@ def read_results(results):
     return fec_params
 
 
-# fetch filings
-while total_pages >= page:
-    filings = requests.get(base_url, params=fec_params).json()
-    if 'results' in filings:
-        read_results(filings['results'])
-        page = filings['pagination']['pages']
-    else: break
+def fetch_daily_files(total_pages, page):
+    # replace with db
+    filing_dict ={}
+    while total_pages >= page:
+        filings = requests.get(base_url, params=fec_params).json()
+        if 'results' in filings:
+            read_results(filings['results'], filing_dict)
+            page = filings['pagination']['pages']
+        else: break
+    return filing_dict
 
-# look up users
-
-results = []
-
-
-# fetch record by committee_id
-for committee_id in filing_dict:
-    info = {
+def format_results(filing_dict):
+    """fetch record by committee_id"""
+    results = []
+    for committee_id in filing_dict:
+        info = {
             'committee_name': filing_dict[committee_id][0]['committee_name'] or '', 
             'committee_id': committee_id,
             'candidate_name': filing_dict[committee_id][0]['candidate_name'] or '',
             'filings': filing_dict[committee_id]
         }
-    results.append(info)
+        results.append(info)
 
-template_data = {
-    'date': yesterday.strftime('%b %d, %Y'),
-    'committees': results,
-}
+    return {
+        'date': yesterday.strftime('%b %d, %Y'),
+        'committees': results,
+    }
 
-server = mail_script.email_log_in()
-mail_script.mail_update(server, template_data, os.environ['ADMIN_EMAIL'])
+def email_filings():
+    filing_dict = fetch_daily_files(1, 1)
+    template_data = format_results(filing_dict)
+    server = mail_script.email_log_in()
+    mail_script.mail_update(server, template_data, os.environ['ADMIN_EMAIL'])
