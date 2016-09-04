@@ -1,9 +1,0 @@
-{% for c in committees %}
-
-        {{ c.committee_name }}{{ c.candidate_name }} {{ c.committee_id }}
-
-        {% for f in c.filings %}
-            {{ f.url }}
-        {% endfor %}
-
-{% endfor %}
