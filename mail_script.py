@@ -22,17 +22,17 @@ def email_log_in():
 
 
 def mail_update(server, data, mail_to):
-    # try:
-    msg = MIMEMultipart()
-    msg['Subject'] = "Today's filings!"
-    msg['From'] = os.environ['EMAIL_ADDRESS']
-    msg['BCC'] = mail_to
-    template = jinja_environment.get_template('basic_filing.html')
-    text = template.render(data)
-    msg.attach(MIMEText(text, 'html'))
-    text = msg.as_string()
-    server.sendmail(os.environ['EMAIL_ADDRESS'], mail_to, text)
-    server.quit()
-    # except:
-    #     mail_update('ERROR FOR {0}'.format(mail_to), os.environ['ADMIN_EMAIL'])
-    #     break
+    try:
+        msg = MIMEMultipart()
+        msg['Subject'] = "Today's filings!"
+        msg['From'] = os.environ['EMAIL_ADDRESS']
+        msg['BCC'] = mail_to
+        template = jinja_environment.get_template('working_filings.html')
+        text = template.render(data)
+        msg.attach(MIMEText(text, 'html'))
+        text = msg.as_string()
+        server.sendmail(os.environ['EMAIL_ADDRESS'], mail_to, text)
+        server.quit()
+    except:
+        mail_update('ERROR FOR {0}'.format(mail_to), os.environ['ADMIN_EMAIL'])
+        exit()

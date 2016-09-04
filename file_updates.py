@@ -13,13 +13,12 @@ import mail_script
 
 total_pages = 1
 page = 1
-# tomorrow = datetime.today() + timedelta(days=1),
-# yesterday = datetime.today() + timedelta(days=-1),
-
+tomorrow = datetime.today() + timedelta(1)
+yesterday = datetime.today() - timedelta(1)
 fec_params = {
     'api_key': os.environ['FEC_API_KEY'],
-    # 'min_receipt_date': strftime("%Y-%m-%d", yesterday),
-    # 'max_receipt_date': strftime("%Y-%m-%d", tomorrow),
+    'min_receipt_date': yesterday.strftime("%Y-%m-%d"),
+    'max_receipt_date': tomorrow.strftime("%Y-%m-%d"),
     'page': 1,
 }
 
@@ -28,10 +27,24 @@ filing_dict ={}
 
 base_url = 'https://api.open.fec.gov/v1/filings/?sort=-receipt_date&per_page=100'
 
+def analize_file_num(num):
+    if num is None:
+        return ''
+    if num and float(num) > 0:
+        return num
+    return ''
+
+def analize_file(num, pdf):
+    if num and float(num) > 0:
+        return 'http://docquery.fec.gov/dcdev/posted/{0}.fec'.format(num)
+    else:
+        return pdf
+
 def read_results(results):
     for r in results:
         result = {
             'sub_id': r['sub_id'], # primary key
+            'document_description': r['document_description'],
             'committee_id': r['committee_id'],
             'committee_name': r['committee_name'],
             'candidate_name': r['candidate_name'],
@@ -46,7 +59,10 @@ def read_results(results):
             'coverage_start_date': r['coverage_start_date'],
             'coverage_end_date': r['coverage_end_date'],
             'pages': r['pages'],
-            'url': 'http://docquery.fec.gov/dcdev/posted/{0}.fec'.format(r['file_number'])
+            'fec_url': 'http://docquery.fec.gov/dcdev/posted/{0}.fec'.format(r['file_number']),
+            'pdf_url': r['pdf_url'],
+            'url': analize_file(r['file_number'], r['pdf_url']),
+            'show_file_num': analize_file_num(r['file_number']),
         }
         if r['committee_id'] in filing_dict:
             filing_dict[r['committee_id']].append(result)
@@ -73,15 +89,15 @@ results = []
 # fetch record by committee_id
 for committee_id in filing_dict:
     info = {
-            'committee_name': filing_dict[committee_id][0]['committee_name'], 
+            'committee_name': filing_dict[committee_id][0]['committee_name'] or '', 
             'committee_id': committee_id,
-            'candidate_name': filing_dict[committee_id][0]['candidate_name'],
+            'candidate_name': filing_dict[committee_id][0]['candidate_name'] or '',
             'filings': filing_dict[committee_id]
         }
     results.append(info)
 
 template_data = {
-    'date': 'today', #strftime('%b %d, %Y', datetime.today()),
+    'date': yesterday.strftime('%b %d, %Y'),
     'committees': results,
 }
 
