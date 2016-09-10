@@ -17,7 +17,7 @@ api = tweepy.API(auth)
 fec_params = {
     'api_key': os.environ['FEC_API_KEY'],
     # don't want to flood the feed with repeats
-    # 'min_receipt_date': datetime.now(),
+    'min_receipt_date': datetime.now(),
 }
 
 def tweet_filings():
@@ -33,8 +33,7 @@ def tweet_filings():
                     message = committee_name + ' ' + link
                     if record['amends_file'] is not None:
                         message = committee_name[:106] + ' ' + link +' amendment'
-                    print(message)
-                    # api.update_status(message)
+                    api.update_status(message)
                     processed_files.append(record['file_number'])
 
                     if len(processed_files) > 500:
