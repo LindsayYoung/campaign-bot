@@ -43,7 +43,6 @@ def read_results(results, filing_dict):
             'document_description': r['document_description'],
             'committee_id': r['committee_id'],
             'committee_name': r['committee_name'],
-            'candidate_name': r['candidate_name'],
             'file_number': r['file_number'],
             'amendment_indicator': r['amendment_indicator'],
             'report_type': r['report_type'],
@@ -86,7 +85,6 @@ def format_results(filing_dict):
         info = {
             'committee_name': filing_dict[committee_id][0]['committee_name'] or '', 
             'committee_id': committee_id,
-            'candidate_name': filing_dict[committee_id][0]['candidate_name'] or '',
             'filings': filing_dict[committee_id]
         }
         results.append(info)
