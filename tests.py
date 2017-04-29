@@ -17,6 +17,7 @@ test_filing = {
             'committee_name': 'Lindsay\'s fictional committee',
             'filings': [
                 {
+                    'candidate_name': '',
                     'file_number': '123456',
                     'amendment_indicator': 'N',
                     'report_type': 'F3',

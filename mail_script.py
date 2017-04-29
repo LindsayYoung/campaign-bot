@@ -34,5 +34,6 @@ def mail_update(server, data, mail_to):
         server.sendmail(os.environ['EMAIL_ADDRESS'], mail_to, text)
         server.quit()
     except:
+        logging.warning('Mail failure')
         mail_update('ERROR FOR {0}'.format(mail_to), os.environ['ADMIN_EMAIL'])
         exit()
